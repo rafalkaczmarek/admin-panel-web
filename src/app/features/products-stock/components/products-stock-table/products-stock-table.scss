@@ -59,12 +59,12 @@ tr.mat-mdc-row:hover {
 }
 
 .status-in-stock {
-  background: rgba(0, 182, 155, 0.15);
+  background: #ecfdf5;
   color: var(--kpi-green);
 }
 
 .status-out-of-stock {
-  background: rgba(249, 60, 101, 0.15);
+  background: #fef2f2;
   color: var(--kpi-red);
 }
 

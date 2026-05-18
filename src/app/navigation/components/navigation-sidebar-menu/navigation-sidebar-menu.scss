@@ -13,6 +13,11 @@
   transition: background 0.2s ease;
 }
 
+.navigation-tree {
+  display: flex;
+  flex-direction: column;
+}
+
 :host-context(html.dark-theme) .sidebar {
   background: #1e2230;
 }
@@ -22,7 +27,7 @@
 }
 
 .logo-text {
-  color: #4880ff;
+  color: #ffffff;
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 800;
   font-size: 20px;

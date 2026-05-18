@@ -79,7 +79,7 @@
         [disabled]="submitting()"
       >
         @if (submitting()) {
-          <mat-spinner diameter="20" class="login-button-spinner" />
+          <mat-spinner diameter="20" class="login-button-spinner" aria-label="Signing in" />
           <span>Signing in...</span>
         } @else {
           <span>Sign In</span>

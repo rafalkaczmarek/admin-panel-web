@@ -3,7 +3,7 @@
 
   @if (service.loading()) {
     <div class="state-container" role="status" aria-label="Loading dashboard data">
-      <mat-spinner diameter="48" />
+      <mat-spinner diameter="48" aria-label="Loading dashboard data" />
       <p class="state-text">Loading dashboard data&hellip;</p>
     </div>
   } @else if (service.error()) {

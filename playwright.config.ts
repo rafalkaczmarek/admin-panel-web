@@ -72,7 +72,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run start -- --host 127.0.0.1 --port 4200',
+    command: 'npx ng serve --host 127.0.0.1 --port 4200',
     url: 'http://127.0.0.1:4200',
     reuseExistingServer: !process.env.CI,
   },

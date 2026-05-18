@@ -1,44 +1,46 @@
-<nav class="sidebar" ngTree #navigationTree="ngTree" aria-label="Main navigation menu" [nav]="true" orientation="vertical">
+<aside class="sidebar">
   <div class="logo">
     <span class="logo-text">DashStack</span>
   </div>
 
-  @for (item of mainMenuItems; track item) {
-    <button
-      ngTreeItem
-      type="button"
-      [value]="item.label"
-      [parent]="navigationTree"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [class.menu-item]="true"
-    >
-      <i [class]="item.icon" aria-hidden="true"></i>
-      <span>{{ item.label }}</span>
-    </button>
-  }
+  <nav class="navigation-tree" ngTree #navigationTree="ngTree" aria-label="Main navigation menu" [nav]="true" orientation="vertical">
+    @for (item of mainMenuItems; track item) {
+      <button
+        ngTreeItem
+        type="button"
+        [value]="item.label"
+        [parent]="navigationTree"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.menu-item]="true"
+      >
+        <i [class]="item.icon" aria-hidden="true"></i>
+        <span>{{ item.label }}</span>
+      </button>
+    }
 
-  <div class="divider"></div>
-  <div class="pages-label">PAGES</div>
+    <div class="divider" role="presentation"></div>
+    <div class="pages-label">PAGES</div>
 
-  @for (item of secondaryMenuItems; track item) {
-    <button
-      ngTreeItem
-      type="button"
-      [value]="item.label"
-      [parent]="navigationTree"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [class.menu-item]="true"
-    >
-      <i [class]="item.icon" aria-hidden="true"></i>
-      <span>{{ item.label }}</span>
-    </button>
-  }
+    @for (item of secondaryMenuItems; track item) {
+      <button
+        ngTreeItem
+        type="button"
+        [value]="item.label"
+        [parent]="navigationTree"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [class.menu-item]="true"
+      >
+        <i [class]="item.icon" aria-hidden="true"></i>
+        <span>{{ item.label }}</span>
+      </button>
+    }
+  </nav>
 
-  <div class="divider"></div>
+  <div class="divider" role="presentation"></div>
   <button
     type="button"
     class="theme-toggle"
@@ -48,4 +50,4 @@
     <i [class]="themeIcon()" aria-hidden="true"></i>
     <span>{{ isDark() ? 'Light Mode' : 'Dark Mode' }}</span>
   </button>
-</nav>
+</aside>

@@ -3,7 +3,7 @@
 
   @if (productsStockService.loading()) {
     <div class="state-container" role="status" aria-label="Loading products stock">
-      <mat-spinner diameter="48" />
+      <mat-spinner diameter="48" aria-label="Loading products stock" />
       <p class="state-text">Loading products stock&hellip;</p>
     </div>
   } @else if (productsStockService.error()) {

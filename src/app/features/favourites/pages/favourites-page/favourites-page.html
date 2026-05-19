@@ -1,0 +1,48 @@
+<app-page-content ariaLabelledBy="favourites-heading">
+  <app-page-hero
+    headingId="favourites-heading"
+    title="Favourites"
+    description="Your saved products at a glance."
+  />
+
+  @if (favouritesService.loading()) {
+    <div class="state-container" role="status" aria-label="Loading favourites">
+      <mat-spinner diameter="48" aria-label="Loading favourites" />
+      <p class="state-text">Loading favourites&hellip;</p>
+    </div>
+  } @else if (favouritesService.error()) {
+    <div class="state-container" role="alert">
+      <i class="las la-exclamation-triangle state-icon state-icon--error" aria-hidden="true"></i>
+      <p class="state-text">{{ favouritesService.error() }}</p>
+      <button mat-flat-button color="primary" (click)="retry()">Retry</button>
+    </div>
+  } @else if (favouritesService.isEmpty()) {
+    <div class="state-container" role="status">
+      <i class="las la-heart-broken state-icon" aria-hidden="true"></i>
+      <p class="state-text">You haven't saved any favourites yet.</p>
+    </div>
+  } @else {
+    <app-favourites-toolbar
+      [categories]="favouritesService.categories()"
+      [selectedCategory]="favouritesService.category()"
+      (searchChange)="onSearch($event)"
+      (sortChange)="onSortChange($event)"
+      (categoryChange)="onCategoryChange($event)"
+    />
+
+    <app-favourites-grid
+      [products]="favouritesService.paginatedProducts()"
+      (toggleFavourite)="onToggleFavourite($event)"
+      (addToCart)="onAddToCart($event)"
+    />
+
+    <mat-paginator
+      [length]="favouritesService.totalCount()"
+      [pageIndex]="favouritesService.pageIndex()"
+      [pageSize]="favouritesService.pageSize()"
+      [pageSizeOptions]="[4, 8, 12, 24]"
+      (page)="onPageChange($event)"
+      aria-label="Select page of favourites"
+    />
+  }
+</app-page-content>

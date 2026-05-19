@@ -1,0 +1,41 @@
+<div class="favourites-toolbar">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+    <mat-label>Search favourites...</mat-label>
+    <input
+      matInput
+      type="search"
+      (input)="onSearchInput($event)"
+      aria-label="Search favourites by name, description or category"
+    />
+  </mat-form-field>
+
+  <div class="toolbar-filters">
+    <mat-form-field appearance="outline" class="select-field">
+      <mat-label>Category</mat-label>
+      <mat-select
+        [value]="selectedCategory()"
+        (selectionChange)="onCategoryChange($event)"
+        aria-label="Filter favourites by category"
+      >
+        <mat-option [value]="allCategoriesValue">All categories</mat-option>
+        @for (category of categories(); track category) {
+          <mat-option [value]="category">{{ category }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="select-field">
+      <mat-label>Sort by</mat-label>
+      <mat-select
+        [value]="selectedSort()"
+        (selectionChange)="onSortChange($event)"
+        aria-label="Sort favourites"
+      >
+        @for (option of sortOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

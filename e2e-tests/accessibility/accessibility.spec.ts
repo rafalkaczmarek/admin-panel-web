@@ -26,4 +26,13 @@ test.describe('Accessibility', () => {
     await expect(page.getByRole('table', { name: 'Products' })).toBeVisible();
     await expectNoAccessibilityViolations(page);
   });
+
+  test('favourites page has no detectable accessibility violations', async ({ page }) => {
+    await loginAsDemoUser(page);
+    await page.goto('/favourites');
+
+    await expect(page.getByRole('heading', { name: 'Favourites' })).toBeVisible();
+    await expect(page.getByRole('region', { name: 'Favourite products' })).toBeVisible();
+    await expectNoAccessibilityViolations(page);
+  });
 });

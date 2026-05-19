@@ -1,0 +1,72 @@
+<article class="favourite-card" [attr.aria-labelledby]="cardHeadingId()">
+  <div class="image-wrapper">
+    <img
+      class="product-image"
+      [src]="product().image"
+      [alt]="product().name + ' product image'"
+      width="240"
+      height="240"
+      loading="lazy"
+    />
+    <button
+      type="button"
+      mat-icon-button
+      class="favourite-toggle"
+      [class.favourite-toggle--active]="product().isFavorite"
+      [attr.aria-pressed]="product().isFavorite"
+      [attr.aria-label]="favouriteAriaLabel()"
+      (click)="onToggleFavourite()"
+    >
+      <i
+        [class]="product().isFavorite ? 'las la-heart' : 'lar la-heart'"
+        aria-hidden="true"
+      ></i>
+    </button>
+  </div>
+
+  <div class="favourite-card__body">
+    <span class="category">{{ product().category }}</span>
+    <h3 [id]="cardHeadingId()" class="name">{{ product().name }}</h3>
+    <p class="description">{{ product().description }}</p>
+
+    <div class="rating" role="img" [attr.aria-label]="ratingAriaLabel()">
+      <span class="stars" aria-hidden="true">
+        @for (state of stars(); track $index) {
+          <i
+            [class]="starIconClass(state)"
+            [class.star-filled]="state !== 'empty'"
+          ></i>
+        }
+      </span>
+      <span class="review-count" aria-hidden="true">({{ product().reviewCount }})</span>
+    </div>
+
+    <div class="colors" role="img" [attr.aria-label]="colorsAriaLabel()">
+      @for (color of product().availableColors; track color) {
+        <span class="color-dot" [style.background]="color" aria-hidden="true"></span>
+      }
+    </div>
+
+    <div class="footer">
+      <div class="prices">
+        <span class="current-price">{{ product().price | currency: 'USD' : 'symbol' : '1.0-2' }}</span>
+        @if (hasDiscount()) {
+          <span class="original-price" aria-label="Original price">
+            {{ product().originalPrice | currency: 'USD' : 'symbol' : '1.0-2' }}
+          </span>
+        }
+      </div>
+
+      <button
+        type="button"
+        mat-flat-button
+        class="add-to-cart"
+        [attr.aria-label]="'Add ' + product().name + ' to cart'"
+        (click)="onAddToCart()"
+      >
+        <i class="las la-shopping-cart" aria-hidden="true"></i>
+        <span>Add to cart</span>
+      </button>
+    </div>
+  </div>
+</article>

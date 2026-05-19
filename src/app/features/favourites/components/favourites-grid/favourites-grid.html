@@ -1,0 +1,9 @@
+<section class="favourites-grid" aria-label="Favourite products">
+  @for (product of products(); track product.id) {
+    <app-favourite-product-card
+      [product]="product"
+      (toggleFavourite)="toggleFavourite.emit($event)"
+      (addToCart)="addToCart.emit($event)"
+    />
+  }
+</section>

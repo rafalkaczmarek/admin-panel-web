@@ -31,5 +31,13 @@ export const routes: Routes = [
         (m) => m.productsStockRoutes,
       ),
   },
+  {
+    path: 'favourites',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('@admin-panel-web/features/favourites/favourites.routes').then(
+        (m) => m.favouritesRoutes,
+      ),
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

@@ -7,7 +7,8 @@
     "types": ["node"],
     "baseUrl": "./",
     "paths": {
-      "@admin-panel-web/*": ["src/app/*"]
+      "@admin-panel-web/*": ["src/app/*"],
+      "@admin-panel-web/environments/*": ["src/environments/*"]
     }
   },
   "files": [

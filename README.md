@@ -54,6 +54,28 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Authentication
+
+The app ships with a mock `AuthService` (demo credentials `admin@dashstack.com` / `admin123`) and a real `AuthRepository` that targets a separate auth backend over JWT plus an httpOnly refresh cookie. Switching between the two is controlled by `src/environments/environment*.ts`:
+
+| Key | Dev (`environment.ts`) | Prod (`environment.production.ts`) |
+|-----|------------------------|-------------------------------------|
+| `useMockAuth` | `true` | `false` |
+| `apiBaseUrl` | `http://localhost:4000/api` | placeholder — set the real backend URL before deploy |
+
+Production builds use `fileReplacements` in `angular.json` to swap the file. The full design — endpoints, interceptors, SSR caveats, security trade-offs — lives in [docs/auth-development.md](docs/auth-development.md).
+
+### E2E credentials
+
+Playwright reads test credentials from environment variables and falls back to the demo account when they are unset (handy while the mock is enabled):
+
+```bash
+E2E_USER_EMAIL=...      # see .env.example
+E2E_USER_PASSWORD=...
+```
+
+Never commit real credentials. Wire these through CI secrets (GitHub Actions / Azure Pipelines).
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -1,19 +1,29 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
+import { environment } from '@admin-panel-web/environments/environment';
 import {
   AuthService,
   INVALID_CREDENTIALS_MESSAGE,
 } from '@admin-panel-web/features/auth/services/auth.service';
+import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
 import { firstValueFrom } from 'rxjs';
 
 const STORAGE_KEY = 'app-auth-session';
 
-describe('AuthService', () => {
+describe('AuthService (mock mode)', () => {
   beforeEach(() => {
     sessionStorage.clear();
     vi.useFakeTimers();
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: APP_ENVIRONMENT, useValue: environment },
+      ],
+    });
   });
 
   afterEach(() => {
@@ -33,7 +43,7 @@ describe('AuthService', () => {
     expect(service.session()).toBeNull();
   });
 
-  it('should restore session from sessionStorage on construction', () => {
+  it('should restore mock session from sessionStorage on construction', () => {
     sessionStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({ email: 'admin@dashstack.com', loggedInAt: '2025-01-01T00:00:00Z' }),
@@ -54,7 +64,7 @@ describe('AuthService', () => {
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  it('should resolve login with valid credentials and persist session', async () => {
+  it('should resolve login with valid demo credentials and persist session', async () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('admin@dashstack.com', 'admin123'));
@@ -66,7 +76,7 @@ describe('AuthService', () => {
     expect(sessionStorage.getItem(STORAGE_KEY)).toContain('admin@dashstack.com');
   });
 
-  it('should reject login with invalid credentials and not persist', async () => {
+  it('should reject login with invalid demo credentials and not persist', async () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('admin@dashstack.com', 'wrong-pass'));
@@ -98,5 +108,11 @@ describe('AuthService', () => {
 
     expect(service.isAuthenticated()).toBe(false);
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull();
+  });
+
+  it('should expose null access token in mock mode', () => {
+    const service = TestBed.inject(AuthService);
+
+    expect(service.getAccessToken()).toBeNull();
   });
 });

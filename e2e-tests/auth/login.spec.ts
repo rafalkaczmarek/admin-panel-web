@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
 
-const DEMO_EMAIL = 'admin@dashstack.com';
-const DEMO_PASSWORD = 'admin123';
+import { getE2EUserCredentials } from '../utils/login-as-demo-user.util';
+
+const { email: DEMO_EMAIL, password: DEMO_PASSWORD } = getE2EUserCredentials();
 
 test.describe('Login', () => {
   test('redirects unauthenticated visitors from /dashboard to /login', async ({ page }) => {

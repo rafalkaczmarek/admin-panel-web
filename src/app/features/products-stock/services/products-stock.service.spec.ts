@@ -1,6 +1,8 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
 import { ProductStock } from '@admin-panel-web/features/products-stock/types/product-stock.interface';
+import { ProductStockUpsert } from '@admin-panel-web/features/products-stock/types/product-stock-upsert.interface';
 import { ProductsStockRepository } from '@admin-panel-web/features/products-stock/services/products-stock.repository';
 import { ProductsStockService } from '@admin-panel-web/features/products-stock/services/products-stock.service';
 
@@ -12,9 +14,23 @@ const MOCK_PRODUCTS: ProductStock[] = [
   { id: 'p3', image: '', name: 'Women Dress', category: 'Fashion', price: 120, piece: 50, availableColors: ['#f93c65'], status: 'in-stock' },
 ];
 
+const UPSERT_BODY: ProductStockUpsert = {
+  image: 'https://example.com/img.png',
+  name: 'New Item',
+  category: 'Electronic',
+  price: 50,
+  piece: 5,
+  availableColors: ['#333333'],
+};
+
 function createMockRepository(overrides: Partial<ProductsStockRepository> = {}): Partial<ProductsStockRepository> {
   return {
     getProducts: () => of(MOCK_PRODUCTS),
+    getProduct: (id: string) => of(MOCK_PRODUCTS.find((p) => p.id === id)!),
+    createProduct: () => of({ ...MOCK_PRODUCTS[0], id: 'p-new', name: UPSERT_BODY.name }),
+    updateProduct: (id: string) =>
+      of({ ...MOCK_PRODUCTS.find((p) => p.id === id)!, name: UPSERT_BODY.name }),
+    deleteProduct: () => of(undefined),
     ...overrides,
   };
 }
@@ -74,6 +90,23 @@ describe('ProductsStockService', () => {
     service.loadProducts();
 
     expect(service.error()).toBe('Failed to load products.');
+  });
+
+  it('should use API error message from HttpErrorResponse', () => {
+    setup({
+      getProducts: () =>
+        throwError(
+          () =>
+            new HttpErrorResponse({
+              status: 401,
+              error: { code: 'INVALID_SESSION', message: 'Missing access token.' },
+            }),
+        ),
+    });
+
+    service.loadProducts();
+
+    expect(service.error()).toBe('Missing access token.');
   });
 
   it('should filter products by name', () => {
@@ -141,6 +174,33 @@ describe('ProductsStockService', () => {
     service.changeSort({ active: 'name', direction: 'asc' });
 
     expect(service.pageIndex()).toBe(0);
+  });
+
+  it('should append product after createProduct', () => {
+    setup();
+    service.loadProducts();
+    service.createProduct(UPSERT_BODY);
+
+    expect(service.totalCount()).toBe(4);
+    expect(service.paginatedProducts().some((p) => p.name === UPSERT_BODY.name)).toBe(true);
+  });
+
+  it('should update product after updateProduct', () => {
+    setup();
+    service.loadProducts();
+    service.updateProduct('p1', UPSERT_BODY);
+
+    const updated = service.paginatedProducts().find((p) => p.id === 'p1');
+    expect(updated?.name).toBe(UPSERT_BODY.name);
+  });
+
+  it('should remove product after deleteProduct', () => {
+    setup();
+    service.loadProducts();
+    service.deleteProduct('p1');
+
+    expect(service.totalCount()).toBe(2);
+    expect(service.paginatedProducts().every((p) => p.id !== 'p1')).toBe(true);
   });
 
   it('should clear previous error on retry', () => {

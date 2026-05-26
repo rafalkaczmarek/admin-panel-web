@@ -1,12 +1,14 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { Sort, SortDirection } from '@angular/material/sort';
 
 import { ProductStock } from '@admin-panel-web/features/products-stock/types/product-stock.interface';
+import { ProductStockUpsert } from '@admin-panel-web/features/products-stock/types/product-stock-upsert.interface';
 import { ProductsStockRepository } from '@admin-panel-web/features/products-stock/services/products-stock.repository';
 import { getProductStockSortValue } from '@admin-panel-web/features/products-stock/utils/product-stock-sort-value.util';
 import { sortByColumn } from '@admin-panel-web/shared/utils/sort-by-column.util';
 
-import { catchError, finalize, of } from 'rxjs';
+import { catchError, EMPTY, finalize, of, tap, type Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsStockService {
@@ -74,9 +76,7 @@ export class ProductsStockService {
       .getProducts()
       .pipe(
         catchError((err: unknown) => {
-          const message =
-            err instanceof Error ? err.message : 'Failed to load products.';
-          this._error.set(message);
+          this._error.set(toProductsErrorMessage(err, 'Failed to load products.'));
           return of(null);
         }),
         finalize(() => this._loading.set(false))
@@ -103,4 +103,64 @@ export class ProductsStockService {
     this._sortDirection.set(sort.direction);
     this._pageIndex.set(0);
   }
+
+  public createProduct(body: ProductStockUpsert): void {
+    this.runMutation(
+      this.repository.createProduct(body),
+      'Failed to create product.',
+      (created) => this._products.update((list) => [...list, created]),
+    );
+  }
+
+  public updateProduct(id: string, body: ProductStockUpsert): void {
+    this.runMutation(
+      this.repository.updateProduct(id, body),
+      'Failed to update product.',
+      (updated) =>
+        this._products.update((list) =>
+          list.map((product) => (product.id === id ? updated : product)),
+        ),
+    );
+  }
+
+  public deleteProduct(id: string): void {
+    this.runMutation(
+      this.repository.deleteProduct(id),
+      'Failed to delete product.',
+      () => this._products.update((list) => list.filter((product) => product.id !== id)),
+    );
+  }
+
+  private runMutation<T>(
+    request$: Observable<T>,
+    fallbackMessage: string,
+    onSuccess: (result: T) => void,
+  ): void {
+    this._loading.set(true);
+    this._error.set(null);
+
+    request$
+      .pipe(
+        tap((result) => onSuccess(result)),
+        catchError((err: unknown) => {
+          this._error.set(toProductsErrorMessage(err, fallbackMessage));
+          return EMPTY;
+        }),
+        finalize(() => this._loading.set(false)),
+      )
+      .subscribe();
+  }
+}
+
+function toProductsErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof HttpErrorResponse) {
+    const body = error.error as { message?: string } | null;
+    if (body?.message) {
+      return body.message;
+    }
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return fallback;
 }

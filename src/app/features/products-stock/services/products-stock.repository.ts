@@ -1,95 +1,35 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 
 import { ProductStock } from '@admin-panel-web/features/products-stock/types/product-stock.interface';
+import { ProductStockUpsert } from '@admin-panel-web/features/products-stock/types/product-stock-upsert.interface';
+import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
-import { Observable, of, delay } from 'rxjs';
-
-const MOCK_PRODUCTS: ProductStock[] = [
-  {
-    id: 'prod-1',
-    image: 'https://placehold.co/48x48/4880ff/fff?text=AW',
-    name: 'Apple Watch Series 4',
-    category: 'Digital Product',
-    price: 690.0,
-    piece: 63,
-    availableColors: ['#333333', '#4880ff', '#00b69b'],
-    status: 'in-stock',
-  },
-  {
-    id: 'prod-2',
-    image: 'https://placehold.co/48x48/ff9f43/fff?text=MS',
-    name: 'Microsoft Headsquare',
-    category: 'Digital Product',
-    price: 190.0,
-    piece: 13,
-    availableColors: ['#f93c65', '#ff9f43'],
-    status: 'in-stock',
-  },
-  {
-    id: 'prod-3',
-    image: 'https://placehold.co/48x48/00b69b/fff?text=WC',
-    name: 'Women\'s Casual Wear',
-    category: 'Fashion',
-    price: 640.0,
-    piece: 635,
-    availableColors: ['#4880ff', '#00b69b', '#ff9f43', '#333333'],
-    status: 'in-stock',
-  },
-  {
-    id: 'prod-4',
-    image: 'https://placehold.co/48x48/f93c65/fff?text=SM',
-    name: 'Samsung A50',
-    category: 'Mobile',
-    price: 400.0,
-    piece: 0,
-    availableColors: ['#333333', '#4880ff'],
-    status: 'out-of-stock',
-  },
-  {
-    id: 'prod-5',
-    image: 'https://placehold.co/48x48/333/fff?text=CA',
-    name: 'Camera Nikon',
-    category: 'Electronic',
-    price: 420.0,
-    piece: 468,
-    availableColors: ['#333333'],
-    status: 'in-stock',
-  },
-  {
-    id: 'prod-6',
-    image: 'https://placehold.co/48x48/4880ff/fff?text=SE',
-    name: 'Sennheiser Case',
-    category: 'Electronic',
-    price: 180.0,
-    piece: 249,
-    availableColors: ['#333333', '#f93c65', '#4880ff'],
-    status: 'in-stock',
-  },
-  {
-    id: 'prod-7',
-    image: 'https://placehold.co/48x48/ff9f43/fff?text=AP',
-    name: 'Apple Airpods',
-    category: 'Electronic',
-    price: 120.0,
-    piece: 0,
-    availableColors: ['#333333'],
-    status: 'out-of-stock',
-  },
-  {
-    id: 'prod-8',
-    image: 'https://placehold.co/48x48/00b69b/fff?text=JB',
-    name: 'JBL Headphones',
-    category: 'Electronic',
-    price: 250.0,
-    piece: 102,
-    availableColors: ['#333333', '#00b69b', '#4880ff'],
-    status: 'in-stock',
-  },
-];
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProductsStockRepository {
+  private readonly http = inject(HttpClient);
+  private readonly env = inject(APP_ENVIRONMENT);
+  private readonly baseUrl = `${this.env.apiBaseUrl}/products`;
+
   public getProducts(): Observable<ProductStock[]> {
-    return of(MOCK_PRODUCTS).pipe(delay(600));
+    return this.http.get<ProductStock[]>(this.baseUrl);
+  }
+
+  public getProduct(id: string): Observable<ProductStock> {
+    return this.http.get<ProductStock>(`${this.baseUrl}/${id}`);
+  }
+
+  public createProduct(body: ProductStockUpsert): Observable<ProductStock> {
+    return this.http.post<ProductStock>(this.baseUrl, body);
+  }
+
+  public updateProduct(id: string, body: ProductStockUpsert): Observable<ProductStock> {
+    return this.http.put<ProductStock>(`${this.baseUrl}/${id}`, body);
+  }
+
+  public deleteProduct(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

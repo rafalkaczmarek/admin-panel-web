@@ -1,0 +1,13 @@
+services:
+  admin-panel-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_CONFIGURATION: docker-local
+    ports:
+      - "${PORT:-4000}:4000"
+    environment:
+      NODE_ENV: production
+      PORT: "${PORT:-4000}"
+    restart: unless-stopped

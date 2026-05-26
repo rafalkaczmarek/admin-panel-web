@@ -10,7 +10,8 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
+ARG BUILD_CONFIGURATION=production
+RUN npx ng build --configuration=${BUILD_CONFIGURATION}
 
 FROM node:22-alpine AS production
 

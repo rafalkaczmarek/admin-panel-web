@@ -1,6 +1,31 @@
 
 You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+## Node.js (this project)
+
+When running scripts from `package.json` (`npm run …`, `npx …`, `ng …`, tests, builds, installs), use Node.js from this installation (aligned with `.nvmrc`):
+
+- **Node:** `C:\Program Files\nodejs\node.exe`
+- **npm:** `C:\Program Files\nodejs\npm.cmd`
+- **npx:** `C:\Program Files\nodejs\npx.cmd`
+
+Do not rely on other `node` / `npm` installations elsewhere on `PATH` for this repo.
+
+**PowerShell** — prepend the Node.js directory, then run the script:
+
+```powershell
+$env:PATH = "C:\Program Files\nodejs;$env:PATH"
+npm run test
+```
+
+**Direct invocation** (when PATH cannot be changed):
+
+```powershell
+& "C:\Program Files\nodejs\npm.cmd" run test
+```
+
+Verify the version when unsure: `& "C:\Program Files\nodejs\node.exe" -v`.
+
 ## TypeScript Best Practices
 
 - Use strict type checking

@@ -1,6 +1,8 @@
 # AdminPanelWeb
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+This project uses [Angular CLI](https://github.com/angular/angular-cli) **22.0.0-rc.1** (Angular 22 stable is not published yet).
+
+**Requirements:** Node.js `24.16.0` (see `.nvmrc`). TypeScript 6.x.
 
 ## Development server
 

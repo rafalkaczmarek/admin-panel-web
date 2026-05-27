@@ -4,12 +4,11 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "baseUrl": "./",
-  "paths": {
-    "@admin-panel-web/*": ["src/app/*"],
-    "@admin-panel-web/environments/*": ["src/environments/*"],
-    "@admin-panel-web/test/*": ["src/test/*"]
-  },
+    "paths": {
+      "@admin-panel-web/*": ["./src/app/*"],
+      "@admin-panel-web/environments/*": ["./src/environments/*"],
+      "@admin-panel-web/test/*": ["./src/test/*"]
+    },
     "types": [
       "vitest/globals"
     ]

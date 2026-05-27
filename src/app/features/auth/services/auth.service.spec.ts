@@ -1,5 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { environment } from '@admin-panel-web/environments/environment';
@@ -21,7 +22,8 @@ describe('AuthService (mock mode)', () => {
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: APP_ENVIRONMENT, useValue: environment },
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: APP_ENVIRONMENT, useValue: { ...environment, useMockAuth: true } },
       ],
     });
   });
@@ -68,7 +70,7 @@ describe('AuthService (mock mode)', () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('admin@dashstack.com', 'admin123'));
-    vi.advanceTimersByTime(400);
+    await vi.advanceTimersByTimeAsync(400);
     const result = await promise;
 
     expect(result.email).toBe('admin@dashstack.com');
@@ -80,9 +82,9 @@ describe('AuthService (mock mode)', () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('admin@dashstack.com', 'wrong-pass'));
-    vi.advanceTimersByTime(400);
-
-    await expect(promise).rejects.toThrow(INVALID_CREDENTIALS_MESSAGE);
+    const assertion = expect(promise).rejects.toThrow(INVALID_CREDENTIALS_MESSAGE);
+    await vi.advanceTimersByTimeAsync(400);
+    await assertion;
     expect(service.isAuthenticated()).toBe(false);
     expect(sessionStorage.getItem(STORAGE_KEY)).toBeNull();
   });
@@ -91,7 +93,7 @@ describe('AuthService (mock mode)', () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('  ADMIN@DashStack.com ', 'admin123'));
-    vi.advanceTimersByTime(400);
+    await vi.advanceTimersByTimeAsync(400);
     const result = await promise;
 
     expect(result.email).toBe('admin@dashstack.com');
@@ -101,7 +103,7 @@ describe('AuthService (mock mode)', () => {
     const service = TestBed.inject(AuthService);
 
     const promise = firstValueFrom(service.login('admin@dashstack.com', 'admin123'));
-    vi.advanceTimersByTime(400);
+    await vi.advanceTimersByTimeAsync(400);
     await promise;
 
     service.logout();

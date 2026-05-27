@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4000",
+    "serve:e2e": "ng serve --configuration e2e --host 127.0.0.1 --port 4000",
+    "mock-api:e2e": "node e2e-tests/mock-api/server.mjs",
     "build": "ng build",
     "serve:ssr": "node dist/admin-panel-web/server/server.mjs",
     "watch": "ng build --watch --configuration development",

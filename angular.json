@@ -75,6 +75,17 @@
                   "with": "src/environments/environment.docker-local.ts"
                 }
               ]
+            },
+            "e2e": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.e2e.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -87,6 +98,9 @@
             },
             "development": {
               "buildTarget": "admin-panel-web:build:development"
+            },
+            "e2e": {
+              "buildTarget": "admin-panel-web:build:e2e"
             }
           },
           "defaultConfiguration": "development"

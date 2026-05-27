@@ -3,7 +3,7 @@ import { inject, Provider } from '@angular/core';
 import { MockAuthService } from '@admin-panel-web/features/auth/mock/mock-auth.service';
 import { HttpAuthService } from '@admin-panel-web/features/auth/services/http-auth.service';
 import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
-import type { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import type { AuthService } from '@admin-panel-web/features/auth/types/auth-service.interface';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
 export function provideAuthService(): Provider[] {

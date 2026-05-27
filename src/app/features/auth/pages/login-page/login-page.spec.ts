@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 
 import { LoginPage } from '@admin-panel-web/features/auth/pages/login-page/login-page';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 import { AuthSession } from '@admin-panel-web/features/auth/types/auth-session.interface';
 
 import { of, throwError } from 'rxjs';
@@ -38,7 +38,7 @@ describe('LoginPage', () => {
       imports: [LoginPage],
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: mockAuthService },
+        { provide: AUTH_SERVICE, useValue: mockAuthService },
         { provide: ActivatedRoute, useValue: activatedRouteWith(returnUrl) },
       ],
     }).compileComponents();

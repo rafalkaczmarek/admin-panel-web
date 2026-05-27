@@ -6,7 +6,8 @@ import {
   AUTH_RETRIED,
   SKIP_AUTH,
 } from '@admin-panel-web/features/auth/interceptors/auth-http-context';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
+import type { AuthService } from '@admin-panel-web/features/auth/types/auth-service.interface';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
 import { catchError, switchMap, throwError } from 'rxjs';
@@ -21,7 +22,7 @@ export const authErrorInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const authService = inject(AuthService);
+  const authService = inject(AUTH_SERVICE);
   const router = inject(Router);
 
   return next(req).pipe(

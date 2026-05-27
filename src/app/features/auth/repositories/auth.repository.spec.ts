@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 
 import { SKIP_AUTH } from '@admin-panel-web/features/auth/interceptors/auth-http-context';
-import { AuthRepository } from '@admin-panel-web/features/auth/services/auth.repository';
+import { AuthRepository } from '@admin-panel-web/features/auth/repositories/auth.repository';
 import { unitTestApiEnvironment } from '@admin-panel-web/test/unit-test-api-environment';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 

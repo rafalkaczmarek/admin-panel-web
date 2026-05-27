@@ -2,7 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 
 import { SKIP_AUTH } from '@admin-panel-web/features/auth/interceptors/auth-http-context';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req.clone({ withCredentials: true }));
   }
 
-  const authService = inject(AuthService);
+  const authService = inject(AUTH_SERVICE);
   const token = authService.getAccessToken();
 
   const headers = token

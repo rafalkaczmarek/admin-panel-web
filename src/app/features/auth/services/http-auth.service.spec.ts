@@ -2,10 +2,9 @@ import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
-import {
-  AuthService,
-  INVALID_CREDENTIALS_MESSAGE,
-} from '@admin-panel-web/features/auth/services/auth.service';
+import { INVALID_CREDENTIALS_MESSAGE } from '@admin-panel-web/features/auth/constants/auth.constants';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
+import { HttpAuthService } from '@admin-panel-web/features/auth/services/http-auth.service';
 import { unitTestApiEnvironment } from '@admin-panel-web/test/unit-test-api-environment';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
@@ -15,20 +14,22 @@ const LOGIN_URL = 'http://test-api/api/auth/login';
 const LOGOUT_URL = 'http://test-api/api/auth/logout';
 const REFRESH_URL = 'http://test-api/api/auth/refresh';
 
-describe('AuthService (real mode)', () => {
+describe('HttpAuthService', () => {
   let http: HttpTestingController;
-  let service: AuthService;
+  let service: HttpAuthService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
+        HttpAuthService,
+        { provide: AUTH_SERVICE, useExisting: HttpAuthService },
         { provide: APP_ENVIRONMENT, useValue: unitTestApiEnvironment },
       ],
     });
     http = TestBed.inject(HttpTestingController);
-    service = TestBed.inject(AuthService);
+    service = TestBed.inject(HttpAuthService);
   });
 
   afterEach(() => {

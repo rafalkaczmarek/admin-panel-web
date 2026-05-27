@@ -12,7 +12,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { SKIP_AUTH } from '@admin-panel-web/features/auth/interceptors/auth-http-context';
 import { authInterceptor } from '@admin-panel-web/features/auth/interceptors/auth.interceptor';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 import { unitTestApiEnvironment } from '@admin-panel-web/test/unit-test-api-environment';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
@@ -24,7 +24,7 @@ function setup(token: string | null) {
       provideHttpClient(withInterceptors([authInterceptor])),
       provideHttpClientTesting(),
       { provide: APP_ENVIRONMENT, useValue: unitTestApiEnvironment },
-      { provide: AuthService, useValue: { getAccessToken: () => token } },
+      { provide: AUTH_SERVICE, useValue: { getAccessToken: () => token } },
     ],
   });
 

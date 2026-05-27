@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 
 import { LogoutPage } from '@admin-panel-web/features/auth/pages/logout-page/logout-page';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 
 describe('LogoutPage', () => {
   let mockAuthService: { logout: ReturnType<typeof vi.fn> };
@@ -15,7 +15,7 @@ describe('LogoutPage', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([{ path: 'login', component: LogoutPage }]),
-        { provide: AuthService, useValue: mockAuthService },
+        { provide: AUTH_SERVICE, useValue: mockAuthService },
       ],
     });
   });

@@ -14,7 +14,7 @@ import { Router, provideRouter, type Routes } from '@angular/router';
 
 import { authErrorInterceptor } from '@admin-panel-web/features/auth/interceptors/auth-error.interceptor';
 import { SKIP_AUTH } from '@admin-panel-web/features/auth/interceptors/auth-http-context';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 import { unitTestApiEnvironment } from '@admin-panel-web/test/unit-test-api-environment';
 import { APP_ENVIRONMENT } from '@admin-panel-web/tokens/app-environment.token';
 
@@ -52,7 +52,7 @@ function setup(opts: { refresh: () => Observable<unknown>; token?: string }): {
       provideHttpClient(withInterceptors([authErrorInterceptor])),
       provideHttpClientTesting(),
       { provide: APP_ENVIRONMENT, useValue: unitTestApiEnvironment },
-      { provide: AuthService, useValue: authMock },
+      { provide: AUTH_SERVICE, useValue: authMock },
     ],
   });
 

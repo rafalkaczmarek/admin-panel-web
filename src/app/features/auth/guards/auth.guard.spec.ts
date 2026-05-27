@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router, UrlTree, provideRouter } from '@angular/router';
 
 import { authGuard } from '@admin-panel-web/features/auth/guards/auth.guard';
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 
 function createMockAuthService(authenticated: boolean) {
   const sessionSignal = signal(authenticated ? { email: 'a', loggedInAt: '' } : null);
@@ -20,7 +20,7 @@ describe('authGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
-        { provide: AuthService, useValue: createMockAuthService(authenticated) },
+        { provide: AUTH_SERVICE, useValue: createMockAuthService(authenticated) },
       ],
     });
   }

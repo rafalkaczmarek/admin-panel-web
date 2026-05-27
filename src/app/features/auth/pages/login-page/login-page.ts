@@ -8,7 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 
-import { AuthService } from '@admin-panel-web/features/auth/services/auth.service';
+import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 
 @Component({
   selector: 'app-login-page',
@@ -28,7 +28,7 @@ import { AuthService } from '@admin-panel-web/features/auth/services/auth.servic
 })
 export class LoginPage {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
+  private readonly authService = inject(AUTH_SERVICE);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 

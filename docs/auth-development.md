@@ -139,7 +139,7 @@ flowchart TB
 
 ### `AuthRepository` — nowy plik
 
-Lokalizacja: `src/app/features/auth/services/auth.repository.ts`. Konwencja taka sama jak [favourites.repository.ts](../src/app/features/favourites/services/favourites.repository.ts) — `@Injectable({ providedIn: 'root' })`, metody zwracają `Observable`.
+Lokalizacja: `src/app/features/auth/repositories/auth.repository.ts`. Konwencja taka sama jak [favourites.repository.ts](../src/app/features/favourites/services/favourites.repository.ts) — `@Injectable({ providedIn: 'root' })`, metody zwracają `Observable`.
 
 ```typescript
 @Injectable({ providedIn: 'root' })

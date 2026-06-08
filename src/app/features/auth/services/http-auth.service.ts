@@ -12,6 +12,7 @@ import {
   EMPTY,
   Observable,
   catchError,
+  finalize,
   map,
   of,
   shareReplay,
@@ -71,17 +72,11 @@ export class HttpAuthService implements AuthService {
         this.clearState();
         return throwError(() => new Error('Session expired.'));
       }),
+      finalize(() => {
+        this.refreshInFlight = null;
+      }),
       shareReplay({ bufferSize: 1, refCount: false }),
     );
-
-    this.refreshInFlight.subscribe({
-      complete: () => {
-        this.refreshInFlight = null;
-      },
-      error: () => {
-        this.refreshInFlight = null;
-      },
-    });
 
     return this.refreshInFlight;
   }

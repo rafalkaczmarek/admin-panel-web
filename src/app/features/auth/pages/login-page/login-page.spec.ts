@@ -24,6 +24,14 @@ function activatedRouteWith(returnUrl: string | null) {
   };
 }
 
+function setValidLoginCredentials(component: LoginPage): void {
+  component['loginModel'].set({
+    email: 'a@b.com',
+    password: 'admin123',
+    rememberMe: false,
+  });
+}
+
 describe('LoginPage', () => {
   let fixture: ComponentFixture<LoginPage>;
   let component: LoginPage;
@@ -76,8 +84,9 @@ describe('LoginPage', () => {
     const session: AuthSession = { email: 'a@b.com', loggedInAt: '' };
     mockAuthService.login.mockReturnValue(of(session));
 
-    component['form'].setValue({ email: 'a@b.com', password: 'admin123', rememberMe: false });
+    setValidLoginCredentials(component);
     component['onSubmit']();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(mockAuthService.login).toHaveBeenCalledWith('a@b.com', 'admin123');
@@ -89,8 +98,9 @@ describe('LoginPage', () => {
     const session: AuthSession = { email: 'a@b.com', loggedInAt: '' };
     mockAuthService.login.mockReturnValue(of(session));
 
-    component['form'].setValue({ email: 'a@b.com', password: 'admin123', rememberMe: false });
+    setValidLoginCredentials(component);
     component['onSubmit']();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/favourites?sort=name');
@@ -101,8 +111,9 @@ describe('LoginPage', () => {
     const session: AuthSession = { email: 'a@b.com', loggedInAt: '' };
     mockAuthService.login.mockReturnValue(of(session));
 
-    component['form'].setValue({ email: 'a@b.com', password: 'admin123', rememberMe: false });
+    setValidLoginCredentials(component);
     component['onSubmit']();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(navigateByUrlSpy).toHaveBeenCalledWith('/dashboard');
@@ -114,8 +125,9 @@ describe('LoginPage', () => {
       throwError(() => new Error('Incorrect email or password.')),
     );
 
-    component['form'].setValue({ email: 'a@b.com', password: 'wrong-pass', rememberMe: false });
+    setValidLoginCredentials(component);
     component['onSubmit']();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     const alert = el.querySelector('[role="alert"]');

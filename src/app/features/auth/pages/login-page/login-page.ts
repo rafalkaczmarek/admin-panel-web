@@ -1,5 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  email,
+  form,
+  FormField,
+  minLength,
+  required,
+  submit,
+} from '@angular/forms/signals';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,10 +17,12 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service.token';
 
+import { firstValueFrom } from 'rxjs';
+
 @Component({
   selector: 'app-login-page',
   imports: [
-    ReactiveFormsModule,
+    FormField,
     RouterLink,
     MatFormFieldModule,
     MatInputModule,
@@ -27,7 +36,6 @@ import { AUTH_SERVICE } from '@admin-panel-web/features/auth/tokens/auth-service
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPage {
-  private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AUTH_SERVICE);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -35,14 +43,20 @@ export class LoginPage {
   protected readonly headingId = 'login-heading';
   protected readonly errorId = 'login-error';
 
-  protected readonly submitting = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly passwordVisible = signal(false);
 
-  protected readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    rememberMe: [false],
+  protected readonly loginModel = signal({
+    email: '',
+    password: '',
+    rememberMe: false,
+  });
+
+  protected readonly loginForm = form(this.loginModel, (path) => {
+    required(path.email, { message: 'Email is required.' });
+    email(path.email, { message: 'Enter a valid email address.' });
+    required(path.password, { message: 'Password is required.' });
+    minLength(path.password, 6, { message: 'Password must be at least 6 characters.' });
   });
 
   protected togglePasswordVisibility(): void {
@@ -50,29 +64,19 @@ export class LoginPage {
   }
 
   protected onSubmit(): void {
-    if (this.submitting()) {
-      return;
-    }
+    void submit(this.loginForm, {
+      action: async () => {
+        this.errorMessage.set(null);
+        const { email: emailValue, password } = this.loginModel();
 
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    const { email, password } = this.form.getRawValue();
-    this.submitting.set(true);
-    this.errorMessage.set(null);
-
-    this.authService.login(email, password).subscribe({
-      next: () => {
-        this.submitting.set(false);
-        const returnUrl = this.resolveReturnUrl();
-        this.router.navigateByUrl(returnUrl);
-      },
-      error: (err: unknown) => {
-        this.submitting.set(false);
-        const message = err instanceof Error ? err.message : 'Unable to sign in.';
-        this.errorMessage.set(message);
+        try {
+          await firstValueFrom(this.authService.login(emailValue, password));
+          const returnUrl = this.resolveReturnUrl();
+          await this.router.navigateByUrl(returnUrl);
+        } catch (err: unknown) {
+          const message = err instanceof Error ? err.message : 'Unable to sign in.';
+          this.errorMessage.set(message);
+        }
       },
     });
   }

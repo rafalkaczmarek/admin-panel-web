@@ -23,7 +23,6 @@ jobs:
 
   e2e:
     name: E2E (Playwright)
-    needs: unit-tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:

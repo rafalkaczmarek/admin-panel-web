@@ -10,7 +10,9 @@
     "serve:ssr": "node dist/admin-panel-web/server/server.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "private": true,
   "engines": {
